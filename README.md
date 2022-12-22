@@ -20,3 +20,5 @@ The Model_Building notebook has the code used to create and finalize model.
 The app.py file has the code for running the streamlit application.
 
 The requirements.txt and packages.txt files have libraries and packages required for the streamlit app. 
+
+The BDA Exploratory Data Analysis Tableau Dashborad.twb file has the EDA Dashboard code.
