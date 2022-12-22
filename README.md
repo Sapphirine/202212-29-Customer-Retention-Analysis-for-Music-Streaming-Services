@@ -7,10 +7,16 @@ It also has files for app deployed on streamlit.
 
 Link to the app : https://manasikhandekar9-eecs6893-bda-project-app-iayhdr.streamlit.app/
 
-#Code:
+# Code:
 
 The model folder has the model in parquet format.
+
 The Data_Preprocessing notebook has the preprocessing code.
+
+The preprocessed.csv has the data after pre processing.
+
 The Model_Building notebook has the code used to create and finalize model.
+
 The app.py file has the code for running the streamlit application.
+
 The requirements.txt and packages.txt files have libraries and packages required for the streamlit app. 
