@@ -20,7 +20,7 @@ from pyspark.ml.tuning import CrossValidator, ParamGridBuilder
 from pyspark.mllib.evaluation import BinaryClassificationMetrics, MulticlassMetrics
 from pyspark.mllib.util import MLUtils
 from pyspark.ml.feature import Bucketizer
-from pyspark.ml.classification import RandomForestClassificationModel, LogisticRegressionModel, GBTClassificationModel, NaiveBayesModel
+from pyspark.ml.classification import RandomForestClassificationModel
 import streamlit as st
 import csv
 
@@ -37,12 +37,12 @@ hide_streamlit_style = """
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.title('''Customer Retention Analysis for Music Streaming Services''')
-#st.subheader('Predict if the User is likely to churn')
-st.subheader( 'Github repo [here](https://github.com/manasikhandekar9/bda-project)')
+st.subheader( 'Github repo [here](https://github.com/Sapphirine/202212-29-Customer-Retention-Analysis-for-Music-Streaming-Services)')
 
+#Take csv file as input
 uploaded_file = st.file_uploader("Choose a file", type="csv")
 
-
+#function to create features from input data
 def create_features(uploaded_file):
     stringIndexerGender = StringIndexer(inputCol="gender", outputCol="genderIndex", handleInvalid = 'skip')
     stringIndexerLevel = StringIndexer(inputCol="last_level", outputCol="levelIndex", handleInvalid = 'skip')
@@ -67,37 +67,31 @@ def create_features(uploaded_file):
     
     return preprocessed_df
     
-
+#function to load model and predict
 def trained_model(test):
                 rf_model = RandomForestClassificationModel.load("model")
                 rf_pred_test = rf_model.transform(test).cache()
-                #rf_predictionAndLabels_test = rf_pred_test.rdd.map(lambda lp: (float(lp.prediction), float(lp.label)))
-                # Instantiate metrics object
-                #metrics_test = MulticlassMetrics(predictionAndLabels_test)
-                #rf_test = metrics_test.weightedFMeasure()
-                rf_test = 0.77
                 preds = rf_pred_test.select("prediction")
                 if preds == 1:
                         results = 1
                 else:
                         results = 0
                 return results
-            
+
+#If file uploaded then 
 if uploaded_file is not None:
     dataframe = pd.read_csv(uploaded_file)
     data = create_features(sqlContext.createDataFrame(dataframe))
-    #st.dataframe(data = data.toPandas().head(10))
     st.text('Our target variable is churn and we are giving vectorized data to the model.')
     if st.button('Predict', key='1'):
                 data = data.withColumnRenamed("churn", "label")
                 results_data = trained_model(data)
-                #st.dataframe(data = results_data.toPandas().head(10))
                 if results_data == 1:
                         st.write("The user is likely to churn")
                 else:
                         st.write("The user is not likely to churn")
-                #st.write("The user is likely to churn")
 
+#Alternate option to take user input manually                       
 st.write("OR")
 st.write("Enter Attributes")
 uid = st.number_input("User Id")
@@ -114,7 +108,7 @@ thumbsdown = st.number_input("Thumbs Down")
 add_friend = st.number_input("Add Friend")
 fields = [uid, gender, level,active_days, state, avg_songs, avg_events, thumbsup, thumbsdown, add_friend]
  
-
+#actions to follow when predict button is clicked
 if st.button('Predict', key='2'):
             with open('user.csv','a', newline='') as f:
                         writer = csv.writer(f)
@@ -134,19 +128,12 @@ if st.button('Predict', key='2'):
                         "addfriend": [add_friend]
             }
             df = pd.DataFrame(data=d)
-            #st.write(df.info())
-            #st.dataframe(data = df.head(10))
             data = create_features(sqlContext.createDataFrame(df))
             data_ml = data.withColumnRenamed("churn", "label")
-            #st.dataframe(data = data_ml.toPandas().head(10))
             results_data = trained_model(data_ml)
-            #st.text("results:",results_data)
-            #st.dataframe(data = results_data.toPandas().head(1))
-            #results =  results_data.toPandas()
             if results_data == 1:
                         st.write("The user is likely to churn")
             else:
                         st.write("The user is not likely to churn")
-            #st.write("The user is likely to churn")
  
             
