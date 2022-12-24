@@ -21,4 +21,7 @@ The app.py file has the code for running the streamlit application.
 
 The requirements.txt and packages.txt files have libraries and packages required for the streamlit app. 
 
+The data folder has a mini dataset that we used in zip format. To run the code in jupyter notebooks, proper path needs to be given to the unzipped json file.
+
 The BDA Exploratory Data Analysis Tableau Dashborad.twb file has the EDA Dashboard code.
+
